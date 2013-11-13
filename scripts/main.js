@@ -2,7 +2,7 @@
 
 (function() {
 	'use strict';
-	var graphId = 'artCircles';
+	var graphId = 'artCircles', graph;
 
 	function ArtCirclesGraph(sourceElement) {
 		this.sourceElement = sourceElement;
@@ -37,16 +37,16 @@
 	};
 
 	ArtCirclesGraph.prototype.start = function() {
-		var width = this.getWidth();
-		var height = this.getHeight();
+		var width = this.getWidth(),
+			height = this.getHeight();
 
 		this.force = d3.layout.force()
 			.nodes(this.nodes)
 			.links(this.links)
 			.size([width, height])
-			.gravity(.1)
-			.linkStrength(.2)
-			.friction(.8)
+			.gravity(0.1)
+			.linkStrength(0.2)
+			.friction(0.8)
 			.linkDistance(75)
 			.charge(-150)
 			.on('tick', this.onTick.bind(this))
@@ -124,7 +124,7 @@
 	}
 
 	function parseRecord(record) {
-		if (typeof(record.value) !== 'undefined') {
+		if (record.value === undefined) {
 			if (isNaN(record.value)) {
 				console.error('non-numeric value: ' + record.value);
 			} else {
@@ -134,7 +134,7 @@
 		return record;
 	}
 
-	var graph = new ArtCirclesGraph(document.getElementById(graphId));
+	graph = new ArtCirclesGraph(document.getElementById(graphId));
 	csv('data/links.csv', parseRecord)
 		.then(function(links) {
 			graph.parseLinks(links);
