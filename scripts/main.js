@@ -37,25 +37,46 @@
 	};
 
 	ArtCirclesGraph.prototype.start = function() {
+		var width = this.getWidth();
+		var height = this.getHeight();
+
 		this.force = d3.layout.force()
 			.nodes(this.nodes)
 			.links(this.links)
-			.size([this.getWidth(), this.getHeight()])
-			//.gravity(.1)
-			//.linkStrength(.2)
-			//.friction(.8)
+			.size([width, height])
+			.gravity(.1)
+			.linkStrength(.2)
+			.friction(.8)
 			.linkDistance(75)
-			//.charge(-150)
+			.charge(-150)
 			.on('tick', this.onTick.bind(this))
 			.start();
+
+		this.xScale = d3.scale.linear()
+			.domain([-width / 2, width / 2])
+			.range([0, width]);
+
+		this.yScale = d3.scale.linear()
+			.domain([-height / 2, height / 2])
+			.range([height, 0]);
+
+		this.zoom = d3.behavior.zoom()
+			.scaleExtent([1, 8])
+			.x(this.xScale)
+			.y(this.yScale)
+			.scaleExtent([1, 10])
+			.on('zoom', this.onZoom.bind(this));
 
 		this.svg = d3.select(this.sourceElement)
 			.append('svg');
 
 		this.rootGroup = this.svg.append('g')
-			.call(d3.behavior.zoom()
-				.scaleExtent([1, 8])
-				.on('zoom', this.onZoom.bind(this)));
+			.call(this.zoom);
+
+		this.rootGroup.append('rect')
+			.attr('width', width)
+			.attr('height', height)
+			.attr('class', 'bg');
 
 		this.linkElements = this.rootGroup.selectAll('.link')
 			.data(this.links)

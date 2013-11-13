@@ -3,6 +3,10 @@
     height: 800px
 }
 
+.graph .bg {
+    fill: #fff;
+}
+
 .node circle {
     fill: #bbbdc0;
 }
