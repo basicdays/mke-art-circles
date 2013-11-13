@@ -1,0 +1,13 @@
+.graph {
+    width: 960px;
+    height: 800px
+}
+
+.node circle {
+    fill: #bbbdc0;
+}
+
+.link {
+    stroke: #bbbdc0;
+    stroke-opacity: .6;
+}
